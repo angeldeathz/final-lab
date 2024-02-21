@@ -12,3 +12,5 @@ jobs:
         # continue-on-error: true # provisional
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: monitor
