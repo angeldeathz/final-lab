@@ -59,11 +59,13 @@ jobs:
         run: heroku container:login
 
       - name: Pull de la Imagen Docker
-        run: docker pull angeldeathz/final-lab:latest
+        run: |
+          docker pull angeldeathz/final-lab:latest
+          docker images | grep angeldeathz/final-lab | awk '{print $3}'
 
       - name: Push to Heroku
         run: |
-          docker tag final-lab registry.heroku.com/final-lab/web
+          docker tag image_id registry.heroku.com/final-lab/web
           docker push registry.heroku.com/final-lab/web
 
       - name: Push to Heroku 2
