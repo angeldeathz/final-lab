@@ -59,6 +59,7 @@ jobs:
           heroku_app_name: final-lab
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           justlogin: true
+      - run: heroku auth:whoami
 
       # - name: Pull de la Imagen Docker
       #   run: |
