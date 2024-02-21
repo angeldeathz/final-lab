@@ -62,11 +62,13 @@ jobs:
           docker images | grep angeldeathz/final-lab | awk '{print $3}'
 
       - name: Push to Heroku
-        run: |
-          docker tag angeldeathz/final-lab registry.heroku.com/final-lab/web
-          docker push registry.heroku.com/final-lab/web
+        run: docker tag angeldeathz/final-lab registry.heroku.com/final-lab/web
+
+      - name: Push to Heroku
+        run: docker push registry.heroku.com/final-lab/web
 
       - name: Push to Heroku 2
-        run: |
-          heroku container:login
-          heroku container:release web --app=final-lab
+        run: heroku container:login
+
+      - name: Push to Heroku 3
+        run: heroku container:release web --app=final-lab
