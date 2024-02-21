@@ -37,9 +37,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v5
+      - name: Build Docker
+        run: docker build --tag angeldeathz/final-lab:latest .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
         with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/final-lab:latest
+          image-ref: "angeldeathz/final-lab:latest"
+          format: "table"
+
+      - name: Push Docker
+        run: |
+          docker push angeldeathz/final-lab
