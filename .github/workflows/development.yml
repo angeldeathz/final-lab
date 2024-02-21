@@ -3,26 +3,14 @@ name: Development
 on: push
 
 jobs:
-  check-branch-name:
+  snyk-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: kaisugi/action-regex-match@v1.0.0
-        id: regex-match
+      - uses: actions/checkout@master
+      - name: SAST Analysis - Snyk
+        uses: snyk/actions/node@master
+        continue-on-error: true # provisional
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          text: ${{ github.head_ref }}
-          regex: "^(feature|hotfix|bug|spike)+[/][a-zA-Z]+"
-      - uses: actions-ecosystem/action-add-labels@v1
-      - run: |
-          echo ${{ steps.regex-match.outputs.match}}
-          if ${{ steps.regex-match.outputs.match != '' }}; then
-            echo "Your branch matches with the pattern successfully."
-          else
-            echo "Your branch doesn't match with the pattern (feature|hotfix|bug|spike)+[/][a-zA-Z]+"
-            echo "Please check your branch name, create a new branch in your machine, then"
-            echo "push the new branch."
-            echo "Correct branch names examples:"
-            echo "{feature|hotfix|bug|spike}/message-about-the-branch-topic"
-            echo "feature/new-client-api"
-            exit 1
-          fi
+          command: monitor
