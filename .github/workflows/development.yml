@@ -61,16 +61,16 @@ jobs:
           justlogin: true
       - run: heroku auth:whoami
 
-      # - name: Pull de la Imagen Docker
-      #   run: |
-      #     docker pull angeldeathz/final-lab:latest
-      #     docker images | grep angeldeathz/final-lab | awk '{print $3}'
+      - name: Pull de la Imagen Docker
+        run: |
+          docker pull angeldeathz/final-lab:latest
+          docker images | grep angeldeathz/final-lab | awk '{print $3}'
 
-      # - name: Push to Heroku
-      #   run: |
-      #     docker tag angeldeathz/final-lab registry.heroku.com/final-lab/web
-      #     docker push registry.heroku.com/final-lab/web
+      - name: Push to Heroku
+        run: |
+          docker tag angeldeathz/final-lab registry.heroku.com/final-lab/web
+          docker push registry.heroku.com/final-lab/web
 
-      # - name: Push to Heroku 2
-      #   run: |
-      #     heroku container:release web --app=final-lab
+      - name: Push to Heroku 2
+        run: |
+          heroku container:release web --app=final-lab
