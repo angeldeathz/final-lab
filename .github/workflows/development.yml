@@ -68,4 +68,5 @@ jobs:
 
       - name: Push to Heroku 2
         run: |
+          heroku container:login
           heroku container:release web --app=final-lab
