@@ -63,7 +63,7 @@ jobs:
 
       - name: Push to Heroku
         run: |
-          docker tag image_id registry.heroku.com/final-lab/web
+          docker tag final-lab registry.heroku.com/final-lab/web
           docker push registry.heroku.com/final-lab/web
 
       - name: Push to Heroku 2
