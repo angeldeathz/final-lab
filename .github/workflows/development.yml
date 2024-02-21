@@ -9,8 +9,6 @@ jobs:
       - uses: actions/checkout@master
       - name: SAST Analysis - Snyk
         uses: snyk/actions/node@master
-        continue-on-error: true # provisional
+        # continue-on-error: true # provisional
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
