@@ -3,76 +3,94 @@ name: Development
 on: push
 
 jobs:
-  snyk-scan:
+  # snyk-scan:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: SCA Analysis - Snyk
+  #       uses: snyk/actions/node@master
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #       with:
+  #         command: monitor
+
+  # sonar-scan:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: SAST Analysis - Sonarcloud
+  #       uses: sonarsource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  dependency-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: SCA Analysis - Snyk
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Dependency Check
+        uses: dependency-check/Dependency-Check_Action@1.1.0
         with:
-          command: monitor
+          project: "final-lab"
+          path: "."
+          format: "HTML"
 
-  sonar-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: SAST Analysis - Sonarcloud
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          name: Depcheck report
+          path: ${{github.workspace}}/reports
 
-      - name: Build Docker Image
-        run: docker build --tag angeldeathz/final-lab:latest .
+  # build:
+  #   needs: [snyk-scan, sonar-scan]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: "angeldeathz/final-lab:latest"
-          format: "table"
+  #     - name: Login to Docker Hub
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Push to Docker registry
-        run: |
-          docker push angeldeathz/final-lab
+  #     - name: Build Docker Image
+  #       run: docker build --tag angeldeathz/final-lab:latest .
 
-  deploy:
-    needs: [snyk-scan, sonar-scan, build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: akhileshns/heroku-deploy@v3.13.15
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "final-lab"
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
-          usedocker: true
-          docker_build_args: |
-            TMDB_V3_API_KEY
-        env:
-          TMDB_V3_API_KEY: ${{secrets.TMBD_TOKEN}}
+  #     - name: Run Trivy vulnerability scanner
+  #       uses: aquasecurity/trivy-action@master
+  #       with:
+  #         image-ref: "angeldeathz/final-lab:latest"
+  #         format: "table"
 
-  dast-analysis:
-    needs: [deploy]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Sleep
-        run: sleep 10
+  #     - name: Push to Docker registry
+  #       run: |
+  #         docker push angeldeathz/final-lab
 
-      - name: OWASP ZAP Scan
-        uses: zaproxy/action-baseline@v0.11.0
-        with:
-          target: "https://final-lab-3e8a47db94c9.herokuapp.com/"
+  # deploy:
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: akhileshns/heroku-deploy@v3.13.15
+  #       with:
+  #         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+  #         heroku_app_name: "final-lab"
+  #         heroku_email: ${{secrets.HEROKU_EMAIL}}
+  #         usedocker: true
+  #         docker_build_args: |
+  #           TMDB_V3_API_KEY
+  #       env:
+  #         TMDB_V3_API_KEY: ${{secrets.TMBD_TOKEN}}
+
+  # dast-analysis:
+  #   needs: [deploy]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Sleep
+  #       run: sleep 10
+
+  #     - name: OWASP ZAP Scan
+  #       uses: zaproxy/action-baseline@v0.11.0
+  #       with:
+  #         target: "https://final-lab-3e8a47db94c9.herokuapp.com/"
