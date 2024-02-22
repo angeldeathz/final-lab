@@ -14,6 +14,6 @@ ENV PORT=$PORT
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=builder /app/dist .
-EXPOSE $PORT
+EXPOSE 8080
 # ENTRYPOINT ["nginx", "-g", "daemon off;"]
 CMD ["nginx", "-g", "daemon off;"]
