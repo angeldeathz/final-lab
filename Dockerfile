@@ -10,13 +10,15 @@ ENV VITE_APP_API_ENDPOINT_URL="https://api.themoviedb.org/3"
 RUN yarn build
 
 FROM nginx:stable-alpine
+ARG PORT
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=builder /app/dist .
 
-COPY ./nginx.config /etc/nginx/nginx.template
-COPY ./nginx.config /etc/nginx/conf.d/default.conf
+RUN echo $PORT
 
-EXPOSE 8080
+# EXPOSE 80
 # ENTRYPOINT ["nginx", "-g", "daemon off;"]
-CMD ["nginx", "-g", "daemon off;"]
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+CMD sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
