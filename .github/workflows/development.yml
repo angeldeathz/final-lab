@@ -17,7 +17,6 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: monitor
           args: --severity-threshold=medium #<low|medium|high|critical>
 
   sonar-scan:
@@ -71,6 +70,7 @@ jobs:
         with:
           image-ref: "angeldeathz/final-lab:latest"
           format: "table"
+          exit-code: "1"
 
       - name: Push to Docker registry
         run: |
