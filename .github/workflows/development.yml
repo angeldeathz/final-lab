@@ -46,7 +46,7 @@ jobs:
           fail-on-severity: moderate
 
   build:
-    needs: [snyk-scan, sonar-scan, dependency-check]
+    needs: [snyk-scan, sonar-scan, dependency-review]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
