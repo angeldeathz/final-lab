@@ -53,25 +53,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: auth
-        run: docker login --username=_ --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
-
-      - name: Pull de la Imagen Docker
-        run: |
-          docker pull angeldeathz/final-lab:latest
-          docker images | grep angeldeathz/final-lab | awk '{print $3}'
-
-      - name: Push to Heroku
-        run: docker tag angeldeathz/final-lab registry.heroku.com/final-lab/web
-
-      - name: Push to Heroku
-        run: docker push registry.heroku.com/final-lab/web
-
-      - name: Login to Heroku Container registry
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-        run: heroku container:login
-
-      - name: Push to Heroku 3
-        run: heroku container:release web --app=final-lab
+      - uses: actions/checkout@v4
+      - uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "final-lab"
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          usedocker: true
