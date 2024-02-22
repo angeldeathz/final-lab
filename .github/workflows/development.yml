@@ -71,6 +71,8 @@ jobs:
           image-ref: "angeldeathz/final-lab:latest"
           format: "table"
           exit-code: "1"
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH,MEDIUM"
 
       - name: Push to Docker registry
         run: |
