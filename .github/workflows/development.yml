@@ -13,11 +13,15 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: monitor
+          args: --severity-threshold=medium #<low|medium|high|critical>
 
   sonar-scan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
       - name: SAST Analysis - Sonarcloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
