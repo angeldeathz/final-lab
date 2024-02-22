@@ -64,3 +64,12 @@ jobs:
             TMDB_V3_API_KEY
         env:
           TMDB_V3_API_KEY: ${{secrets.TMBD_TOKEN}}
+
+  dast-analysis:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: OWASP ZAP Scan
+        uses: zaproxy/action-baseline@v0.11.0
+        with:
+          target: "https://final-lab-3e8a47db94c9.herokuapp.com/"
