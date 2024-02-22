@@ -16,4 +16,4 @@ RUN rm -rf ./*
 COPY --from=builder /app/dist .
 EXPOSE $PORT
 # ENTRYPOINT ["nginx", "-g", "daemon off;"]
-CMD sed -i -e 's/$PORT/'"$PORT"'/g' && nginx -g 'daemon off;'
+CMD sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
