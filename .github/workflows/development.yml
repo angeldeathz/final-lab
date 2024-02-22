@@ -17,7 +17,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=medium #<low|medium|high|critical>
+          args: --severity-threshold=low #<low|medium|high|critical>
 
   sonar-scan:
     runs-on: ubuntu-latest
