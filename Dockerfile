@@ -13,6 +13,10 @@ FROM nginx:stable-alpine
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=builder /app/dist .
+
+COPY ./nginx.config /etc/nginx/nginx.template
+COPY ./nginx.config /etc/nginx/conf.d/default.conf
+
 EXPOSE 8080
 # ENTRYPOINT ["nginx", "-g", "daemon off;"]
 CMD ["nginx", "-g", "daemon off;"]
