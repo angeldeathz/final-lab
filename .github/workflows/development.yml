@@ -8,49 +8,49 @@ on:
       - main
 
 jobs:
-  # snyk-scan:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: SCA Analysis - Snyk
-  #       uses: snyk/actions/node@master
-  #       env:
-  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-  #       with:
-  #         args: --severity-threshold=medium #<low|medium|high|critical>
+  snyk-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: SCA Analysis - Snyk
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=medium #<low|medium|high|critical>
 
-  # sonar-scan:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         # Disabling shallow clone is recommended for improving relevancy of reporting
-  #         fetch-depth: 0
-  #     - name: SAST Analysis - Sonarcloud
-  #       uses: sonarsource/sonarcloud-github-action@master
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  sonar-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
+      - name: SAST Analysis - Sonarcloud
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # dependency-check:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Dependency Check
-  #       uses: dependency-check/Dependency-Check_Action@1.1.0
-  #       with:
-  #         project: "final-lab"
-  #         path: "."
-  #         format: "HTML"
+  dependency-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependency Check
+        uses: dependency-check/Dependency-Check_Action@1.1.0
+        with:
+          project: "final-lab"
+          path: "."
+          format: "HTML"
 
-  #     - name: Upload Test results
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         name: Depcheck report
-  #         path: ${{github.workspace}}/reports
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
+        with:
+          name: Depcheck report
+          path: ${{github.workspace}}/reports
 
   build:
-    # needs: [snyk-scan, sonar-scan, dependency-check]
+    needs: [snyk-scan, sonar-scan, dependency-check]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
