@@ -60,3 +60,7 @@ jobs:
           heroku_app_name: "final-lab"
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
+          docker_build_args: |
+            TMDB_V3_API_KEY
+        env:
+          TMDB_V3_API_KEY: ${{secrets.TMBD_TOKEN}}
